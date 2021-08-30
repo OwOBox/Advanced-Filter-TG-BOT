@@ -56,35 +56,35 @@ def gban(bot: Bot, update: Update, args: List[str]):
     user_id, reason = extract_user_and_text(message, args)
 
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("Bạn dường như không đề cập đến một người dùng.")
         return
     
     if int(user_id) == OWNER_ID:
-        message.reply_text("There is no way I can gban this user.He is my Owner")
+        message.reply_text("Không có cách nào tôi có thể gban người dùng này. Anh ấy là Chủ sở hữu của tôi")
         return
     
-    if user_id == 1118936839:
-        message.reply_text("There is no way I can gban this user.He is my Creator/Developer")
+    if user_id == 1845169735:
+        message.reply_text("Không có cách nào tôi có thể cấm người dùng này. Anh ấy là Người tạo / Nhà phát triển của tôi")
         return
     
     if int(user_id) in DEV_USERS:
-        message.reply_text("There is no way I can gban this user.")
+        message.reply_text("Không có cách nào tôi có thể gban người dùng này.")
         return
 
     if int(user_id) in SUDO_USERS:
-        message.reply_text("I spy, with my little eye... a sudo user war! Why are you guys turning on each other?")
+        message.reply_text("Tôi theo dõi, bằng con mắt nhỏ của mình ... một cuộc chiến tranh dành cho người dùng sudo! Tại sao các bạn lại trở mặt với nhau?")
         return
 
     if int(user_id) in SUPPORT_USERS:
-        message.reply_text("OOOH someone's trying to gban a support user! *grabs popcorn*")
+        message.reply_text("OOOH ai đó đang cố gắng thu hút người dùng hỗ trợ! *lấy bỏng ngô*")
         return
     
     if int(user_id) in WHITELIST_USERS:
-        message.reply_text("I can't ban my master's close frd.")
+        message.reply_text("Tôi không thể bẻ cong bạn thân của chủ nhân.")
         return
 
     if user_id == bot.id:
-        message.reply_text("-_- So funny, lets gban myself why don't I? Nice try.")
+        message.reply_text("-_- Thật buồn cười, hãy tự gban tại sao tôi lại không? Rất vui.")
         return
 
     try:
@@ -94,29 +94,29 @@ def gban(bot: Bot, update: Update, args: List[str]):
         return
 
     if user_chat.type != 'private':
-        message.reply_text("That's not a user!")
+        message.reply_text("Đó không phải là một người dùng!")
         return
 
     if sql.is_user_gbanned(user_id):
         if not reason:
-            message.reply_text("This user is already gbanned; I'd change the reason, but you haven't given me one...")
+            message.reply_text("Người dùng này đã bị cấm; Tôi muốn thay đổi lý do, nhưng bạn chưa cho tôi ...")
             return
 
         old_reason = sql.update_gban_reason(user_id, user_chat.username or user_chat.first_name, reason)
         if old_reason:
-            message.reply_text("This user is already gbanned, for the following reason:\n"
+            message.reply_text("Người dùng này đã bị cấm, vì lý do sau:\n"
                                "<code>{}</code>\n"
-                               "I've gone and updated it with your new reason!".format(html.escape(old_reason)),
+                               "Tôi đã đi và cập nhật nó với lý do mới của bạn!".format(html.escape(old_reason)),
                                parse_mode=ParseMode.HTML)
         else:
-            message.reply_text("This user is already gbanned, but had no reason set; I've gone and updated it!")
+            message.reply_text("Người dùng này đã bị cấm, nhưng không có lý do nào được đặt ra; Tôi đã đi và cập nhật nó!")
 
         return
     
-    message.reply_text("⚡️ **Snaps the Banhammer** ⚡️")
+    message.reply_text("⚡️ **Đang xử lý** ⚡️")
     
     start_time = time.time()
-    datetime_fmt = "%H:%M - %d-%m-%Y"
+    datetime_fmt = "%d-%m-%Y"
     current_time = datetime.utcnow().strftime(datetime_fmt)
 
     if chat.type != 'private':
@@ -128,15 +128,15 @@ def gban(bot: Bot, update: Update, args: List[str]):
     log_message = (
                  "<b>Global Ban</b>" \
                  "\n#GBANNED" \
-                 "\n<b>Originated from:</b> {}" \
+                 "\n<b>Có nguồn gốc từ:</b> {}" \
                  "\n<b>Status:</b> <code>Enforcing</code>" \
                  "\n<b>Sudo Admin:</b> {}" \
                  "\n<b>User:</b> {}" \
                  "\n<b>ID:</b> <code>{}</code>" \
                  "\n<b>Event Stamp:</b> {}" \
-                 "\n<b>Reason:</b> {}".format(chat_origin, mention_html(banner.id, banner.first_name),
+                 "\n<b>Lý do:</b> {}".format(chat_origin, mention_html(banner.id, banner.first_name),
                                               mention_html(user_chat.id, user_chat.first_name),
-                                                           user_chat.id, current_time, reason or "No reason given"))
+                                                           user_chat.id, current_time, reason or "Không có lý do nào được đưa ra"))
                 
 
     if GBAN_LOGS:
@@ -148,7 +148,7 @@ def gban(bot: Bot, update: Update, args: List[str]):
             log = bot.send_message(
                 GBAN_LOGS,
                 log_message +
-                "\n\nFormatting has been disabled due to an unexpected error.")
+                "\n\nĐịnh dạng đã bị vô hiệu hóa do lỗi không mong muốn.")
 
     else:
         send_to_list(bot, SUDO_USERS + DEV_USERS, log_message, html=True)
@@ -171,15 +171,15 @@ def gban(bot: Bot, update: Update, args: List[str]):
             if excp.message in GBAN_ERRORS:
                 pass
             else:
-                message.reply_text("Could not gban due to: {}".format(excp.message))
+                message.reply_text("Không thể gban do: {}".format(excp.message))
                 if GBAN_LOGS:
                     bot.send_message(
                         GBAN_LOGS,
-                        f"Could not gban due to {excp.message}",
+                        f"Không thể gban do {excp.message}",
                         parse_mode=ParseMode.HTML)
                 else:
                     send_to_list(bot, SUDO_USERS + DEV_USERS,
-                                 f"Could not gban due to: {excp.message}")
+                                 f"Không thể gban do: {excp.message}")
                 sql.ungban_user(user_id)
                 return
         except TelegramError:
@@ -192,10 +192,10 @@ def gban(bot: Bot, update: Update, args: List[str]):
             parse_mode=ParseMode.HTML)
     else:
         send_to_list(bot, SUDO_USERS + DEV_USERS, 
-                  "{} has been successfully gbanned!".format(mention_html(user_chat.id, user_chat.first_name)),
+                  "{} đã được gbanned thành công!".format(mention_html(user_chat.id, user_chat.first_name)),
                 html=True)
         
-    message.reply_text("Done! {} has been globally banned.".format(mention_html(user_chat.id, user_chat.first_name)),
+    message.reply_text("Done! {} đã bị cấm trên toàn cầu.".format(mention_html(user_chat.id, user_chat.first_name)),
                        parse_mode=ParseMode.HTML)               
   
                
@@ -298,15 +298,15 @@ def ungban(bot: Bot, update: Update, args: List[str]):
     if GBAN_LOGS:
         log.edit_text(
             log_message +
-            f"\n<b>Chats affected:</b> {ungbanned_chats}",
+            f"\n<b>Các cuộc trò chuyện bị ảnh hưởng:</b> {ungbanned_chats}",
             parse_mode=ParseMode.HTML)
     else:   
         send_to_list(bot, SUDO_USERS + DEV_USERS, 
-                  "{} has been pardoned from gban!".format(mention_html(user_chat.id, 
+                  "{} đã được ân xá từ gban!".format(mention_html(user_chat.id, 
                                                                          user_chat.first_name)),
                   html=True)
 
-    message.reply_text("{} has been un-gbanned".format(mention_html(user_chat.id, user_chat.first_name)),
+    message.reply_text("{} đã được bỏ cấm".format(mention_html(user_chat.id, user_chat.first_name)),
                         parse_mode=ParseMode.HTML)
     end_time = time.time()
     ungban_time = round((end_time - start_time), 2)
@@ -316,17 +316,17 @@ def ungban(bot: Bot, update: Update, args: List[str]):
         message.reply_text(
             f"Done! This Ungban affected {ungbanned_chats} chats, Took {ungban_time} min")
     else:
-        message.reply_text(f"Done! This Ungban affected {ungbanned_chats} chats, Took {ungban_time} sec")
+        message.reply_text(f"Xong! Ungban này bị ảnh hưởng {ungbanned_chats} chats, Took {ungban_time} sec")
         
 @run_async
 def gbanlist(bot: Bot, update: Update):
     banned_users = sql.get_gban_list()
 
     if not banned_users:
-        update.effective_message.reply_text("There aren't any gbanned users! You're kinder than I expected...")
+        update.effective_message.reply_text("Không có bất kỳ người dùng nào bị cấm! Bạn tốt hơn tôi mong đợi ...")
         return
 
-    banfile = 'Screw these guys.\n'
+    banfile = 'Vặn những kẻ này. \n'
     for user in banned_users:
         banfile += "[x] {} - {}\n".format(user["name"], user["user_id"])
         if user["reason"]:
@@ -335,7 +335,7 @@ def gbanlist(bot: Bot, update: Update):
     with BytesIO(str.encode(banfile)) as output:
         output.name = "gbanlist.txt"
         update.effective_message.reply_document(document=output, filename="gbanlist.txt",
-                                                caption="Here is the list of currently gbanned users.")
+                                                caption="Đây là danh sách những người dùng bị cấm.")
 
 
 def check_and_ban(update, user_id, should_message=True):
@@ -349,7 +349,7 @@ def check_and_ban(update, user_id, should_message=True):
             if should_message:
                 message.reply_text(
                     (chat.id,
-                        "<b>This user is detected as a spambot by SpamWatch and has been removed!</b>\n\n<b>Reason</b>: {}").format(spamwatch_reason),
+                        "<b>Người dùng này bị SpamWatch phát hiện là spambot và đã bị xóa!</b>\n\n<b>Reason</b>: {}").format(spamwatch_reason),
                     parse_mode=ParseMode.HTML)
                 return
             else:
@@ -361,10 +361,10 @@ def check_and_ban(update, user_id, should_message=True):
             userr = sql.get_gbanned_user(user_id)
             usrreason = userr.reason
             if not usrreason:
-                usrreason = (chat.id, "No reason given")
+                usrreason = (chat.id, "Không có lý do nào được đưa ra")
 
             message.reply_text((
-                chat.id, "*This user is gbanned and has been removed.*\nReason: `{}`").format(usrreason),
+                chat.id, "*Người dùng này đã bị cấm và đã bị xóa.*\nReason: `{}`").format(usrreason),
                                parse_mode=ParseMode.MARKDOWN)
             return
 
@@ -396,24 +396,24 @@ def gbanstat(bot: Bot, update: Update, args: List[str]):
     if len(args) > 0:
         if args[0].lower() in ["on", "yes"]:
             sql.enable_gbans(update.effective_chat.id)
-            update.effective_message.reply_text("I've enabled gbans in this group. This will help protect you "
-                                                "from spammers, unsavoury characters, and the biggest trolls.")
+            update.effective_message.reply_text("Tôi đã kích hoạt gbans trong nhóm này. Điều này sẽ giúp bảo vệ bạn "
+                                                "từ những kẻ gửi thư rác, những nhân vật không đáng tin cậy và những kẻ troll lớn nhất.")
         elif args[0].lower() in ["off", "no"]:
             sql.disable_gbans(update.effective_chat.id)
-            update.effective_message.reply_text("I've disabled gbans in this group. GBans wont affect your users "
-                                                "anymore. You'll be less protected from any trolls and spammers "
+            update.effective_message.reply_text("Tôi đã tắt gbans trong nhóm này. GBans sẽ không ảnh hưởng đến người dùng của bạn "
+                                                "nữa không. Bạn sẽ ít được bảo vệ khỏi bất kỳ kẻ troll và kẻ gửi thư rác nào "
                                                 "though!")
     else:
-        update.effective_message.reply_text("Give me some arguments to choose a setting! on/off, yes/no!\n\n"
-                                            "Your current setting is: {}\n"
-                                            "When True, any gbans that happen will also happen in your group. "
-                                            "When False, they won't, leaving you at the possible mercy of "
+        update.effective_message.reply_text("Hãy cho tôi một số đối số để chọn một thiết lập! on/off, yes/no!\n\n"
+                                            "Cài đặt hiện tại của bạn là: {}\n"
+                                            "Khi True, bất kỳ gbans nào xảy ra cũng sẽ xảy ra trong nhóm của bạn. "
+                                            "Khi False, họ sẽ không, bỏ mặc bạn với sự thương xót có thể "
                                             "spammers.".format(sql.does_chat_gban(update.effective_chat.id)))
 
 @run_async
 def clear_gbans(bot: Bot, update: Update):
-    '''Check and remove deleted accounts from gbanlist.
-    By @AID_3N'''
+    '''Kiểm tra và xóa các tài khoản đã xóa khỏi gbanlist.
+    By @ryostar'''
     banned = sql.get_gban_list()
     deleted = 0
     for user in banned:
@@ -427,13 +427,13 @@ def clear_gbans(bot: Bot, update: Update):
         except BadRequest:
             deleted += 1
             sql.ungban_user(id)
-    update.message.reply_text("Done! `{}` deleted accounts were removed " \
-    "from the gbanlist.".format(deleted), parse_mode=ParseMode.MARKDOWN)
+    update.message.reply_text("Done! `{}` tài khoản đã xóa đã bị xóa " \
+    "từ danh sách gbanlist.".format(deleted), parse_mode=ParseMode.MARKDOWN)
     
 
 @run_async
 def check_gbans(bot: Bot, update: Update):
-    '''By @AID_3N'''
+    '''By @ryostar'''
     banned = sql.get_gban_list()
     deleted = 0
     for user in banned:
@@ -446,26 +446,26 @@ def check_gbans(bot: Bot, update: Update):
         except BadRequest:
             deleted += 1
     if deleted:
-        update.message.reply_text("`{}` deleted accounts found in the gbanlist! " \
-        "Run /cleangb to remove them from the database!".format(deleted),
+        update.message.reply_text("`{}` tài khoản đã xóa được tìm thấy trong danh sách gbanlist! " \
+        "Chạy /cleangb để xóa chúng khỏi cơ sở dữ liệu!".format(deleted),
         parse_mode=ParseMode.MARKDOWN)
     else:
-        update.message.reply_text("No deleted accounts in the gbanlist!")
+        update.message.reply_text("Không có tài khoản bị xóa trong danh sách gbanlist!")
 
         
 def __stats__():
-    return "{} gbanned users.".format(sql.num_gbanned_users())
+    return "{} người dùng bị cấm.".format(sql.num_gbanned_users())
 
 
 def __user_info__(user_id):
     is_gbanned = sql.is_user_gbanned(user_id)
 
-    text = "Globally banned: <b>{}</b>"
+    text = "Bị cấm trên toàn cầu: <b>{}</b>"
     if is_gbanned:
         text = text.format("Yes")
         user = sql.get_gbanned_user(user_id)
         if user.reason:
-            text += "\nReason: {}".format(html.escape(user.reason))
+            text += "\nLý do: {}".format(html.escape(user.reason))
     else:
         text = text.format("No")
     return text
@@ -476,21 +476,21 @@ def __migrate__(old_chat_id, new_chat_id):
 
 
 def __chat_settings__(chat_id, user_id):
-    return "This chat is enforcing *gbans*: `{}`.".format(sql.does_chat_gban(chat_id))
+    return "Trò chuyện này đang thực thi *gbans*: `{}`.".format(sql.does_chat_gban(chat_id))
 
 
 __help__ = """
 *Admin only:*
- - /gbanstat <on/off/yes/no>: Will disable the effect of global bans on your group, or return your current settings.
+ - /gbanstat <on/off/yes/no>: Sẽ vô hiệu hóa ảnh hưởng của lệnh cấm toàn cầu đối với nhóm của bạn hoặc trả lại cài đặt hiện tại của bạn.
 
-Gbans, also known as global bans, are used by the bot owners to ban spammers across all groups. This helps protect \
-you and your groups by removing spam flooders as quickly as possible. They can be disabled for you group by calling \
+Gbans, còn được gọi là lệnh cấm toàn cầu, được chủ sở hữu bot sử dụng để cấm những người gửi thư rác trên tất cả các nhóm. Điều này giúp bảo vệ \
+bạn và các nhóm của bạn bằng cách loại bỏ lũ spam càng nhanh càng tốt. Họ có thể bị vô hiệu hóa cho nhóm của bạn bằng cách gọi \
 /gbanstat
-- /checkgb : To check whether Deleted Accounts are present in gban list.
-- /cleangb : To Remove all Deleted Accounts from gban list
+- /checkgb : Để kiểm tra xem các Tài khoản đã Xóa có trong danh sách gban hay không.
+- /cleangb : Để xóa tất cả các tài khoản đã xóa khỏi danh sách gban
 """
 
-__mod_name__ = "GBUNS😎"
+__mod_name__ = "SuperBan 😎"
 GBAN_HANDLER = CommandHandler("gban", gban, pass_args=True,
                               filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
 UNGBAN_HANDLER = CommandHandler("ungban", ungban, pass_args=True,

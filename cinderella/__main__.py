@@ -29,23 +29,22 @@ from cinderella.modules.connection import connect_button
 
 PM_START_TEXT = """
 _Hello_ *{}*
-_My name is_ *{}*\n_A Powerful Telegram FilterBOT to Manage Your Groups,feel free to add to your groups!!_
-_Maintained by_ [{}](tg://user?id={})
+_Tên tôi là_ *{}*\n_Một Bộ lọc Telegram mạnh mẽ để Quản lý Nhóm của bạn, hãy thêm vào nhóm của bạn!!_
+_Duy trì bởi_ [{}](tg://user?id={})
 """
 
 
 HELP_STRINGS = """
-Hey there! My name is *{}*.
-I'm a Filter Bot with a few fun extras! Have a look at the following for an idea of some of \
+Này đó! Tên tôi là  *{}*.
+Tôi là một Bot lọc với một vài tính năng bổ sung thú vị! Hãy xem phần sau để biết ý tưởng về một số \
 the things I can help you with.
 *Main* commands available:
  💠 - /start: start the bot
  💠 - /help: PM's you this message.
  💠 - /help <module name>: PM's you info about that module.
- 💠 - /source: Information about my source.
 {}
-And the following:
-""".format(dispatcher.bot.first_name, "" if not ALLOW_EXCL else "\nAll commands can either be used with / or !.\n")
+Và những điều sau đây:
+""".format(dispatcher.bot.first_name, "" if not ALLOW_EXCL else "\nTất cả các lệnh đều có thể được sử dụng với / or !.\n")
 
 
 
@@ -75,7 +74,7 @@ GDPR = []
 
 START_IMG = os.environ.get('START_IMG', None)
 if START_IMG is None:
-    img = "https://www.betabreakers.com/wp-content/uploads/2016/05/38699913_S.jpg"
+    img = "https://telegra.ph/file/02208aa88f7ea86721b4c.jpg"
 else:
   img = START_IMG    
     
@@ -87,7 +86,7 @@ for module_name in ALL_MODULES:
     if not imported_module.__mod_name__.lower() in IMPORTED:
         IMPORTED[imported_module.__mod_name__.lower()] = imported_module
     else:
-        raise Exception("Can't have two modules with the same name! Please change one")
+        raise Exception("Không thể có hai mô-đun có cùng tên! Vui lòng thay đổi một")
 
     if hasattr(imported_module, "__help__") and imported_module.__help__:
         HELPABLE[imported_module.__mod_name__.lower()] = imported_module
@@ -132,7 +131,7 @@ def send_help(chat_id, text, keyboard=None):
 def test(bot: Bot, update: Update):
     # pprint(eval(str(update)))
     # update.effective_message.reply_text("Hola tester! _I_ *have* `markdown`", parse_mode=ParseMode.MARKDOWN)
-    update.effective_message.reply_text("This person edited a message")
+    update.effective_message.reply_text("Người này đã sửa một tin nhắn")
     print(update.effective_message)
 
 
@@ -176,8 +175,8 @@ def send_start(bot, update):
     first_name = update.effective_user.first_name 
     text = PM_START_TEXT
 
-    keyboard = [[InlineKeyboardButton(text="🤝Help",callback_data="help_back"),InlineKeyboardButton(text="🛡Creator🛡",url="https://t.me/owogram")]]
-    keyboard += [[InlineKeyboardButton(text="🌐Connect Group", callback_data="main_connect"),InlineKeyboardButton(text="⚜️Add Me⚜️",url="t.me/{}?startgroup=true".format(bot.username))]]
+    keyboard = [[InlineKeyboardButton(text="🤝Cứu giúp",callback_data="help_back"),InlineKeyboardButton(text="🛡Tác giả🛡",url="https://t.me/owogram")]]
+    keyboard += [[InlineKeyboardButton(text="🌐Kết nối nhóm", callback_data="main_connect"),InlineKeyboardButton(text="⚜️Thêm vào nhóm⚜️",url="t.me/{}?startgroup=true".format(bot.username))]]
 
     update.effective_message.reply_photo(img, PM_START_TEXT.format(escape_markdown(first_name), escape_markdown(bot.first_name), OWNER_NAME, OWNER_ID), 
                                          reply_markup=InlineKeyboardMarkup(keyboard), disable_web_page_preview=True, parse_mode=ParseMode.MARKDOWN)

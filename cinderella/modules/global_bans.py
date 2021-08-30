@@ -204,9 +204,9 @@ def gban(bot: Bot, update: Update, args: List[str]):
 
     if gban_time > 60:
         gban_time = round((gban_time / 60), 2)
-        message.reply_text(f"Done! This gban affected {gbanned_chats} chats, Took {gban_time} min")
+        message.reply_text(f"Xong! Gban này bị ảnh hưởng {gbanned_chats} nhóm, mất {gban_time} phút")
     else:
-        message.reply_text(f"Done! This gban affected {gbanned_chats} chats, Took {gban_time} sec") 
+        message.reply_text(f"Xong! Gban này bị ảnh hưởng {gbanned_chats} nhóm, mất {gban_time} giây") 
                 
 
 
@@ -218,19 +218,19 @@ def ungban(bot: Bot, update: Update, args: List[str]):
 
     user_id = extract_user(message, args)
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("Bạn dường như không đề cập đến một người dùng.")
         return
 
     user_chat = bot.get_chat(user_id)
     if user_chat.type != 'private':
-        message.reply_text("That's not a user!")
+        message.reply_text("Đó không phải là một người dùng!")
         return
 
     if not sql.is_user_gbanned(user_id):
-        message.reply_text("This user is not gbanned!")
+        message.reply_text("Người dùng này không bị cấm!")
         return
 
-    message.reply_text("I pardon {}, globally with a second chance.".format(user_chat.first_name))
+    message.reply_text("Tôi xin lỗi {}, trên toàn cầu với cơ hội thứ hai.".format(user_chat.first_name))
    
     start_time = time.time()
     datetime_fmt = "%H:%M - %d-%m-%Y"
@@ -257,7 +257,7 @@ def ungban(bot: Bot, update: Update, args: List[str]):
             log = bot.send_message(
                 GBAN_LOGS,
                 log_message +
-                "\n\nFormatting has been disabled due to an unexpected error.")
+                "\n\nĐịnh dạng đã bị vô hiệu hóa do lỗi không mong muốn")
     else:
         send_to_list(bot, SUDO_USERS + DEV_USERS, log_message, html=True)
     
